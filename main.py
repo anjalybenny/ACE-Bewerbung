@@ -14,17 +14,21 @@ def home():
 
 @api.route('/api/temp', methods=['GET'])
 def convert_celsuis_to_kelvin():
-    cel = request.args.get("celsius", default=25, type=float)
+    try:
+        cel = float(request.args.get('celsius', ''))
 
-    temp_data = {
+        temp_data = {
 
-        "celsius": cel,
+            "celsius": cel,
 
-        "kelvin": cel + 273.15,
+            "kelvin": cel + 273.15,
 
-    }
+        }
 
-    return jsonify(temp_data), 200
+        return jsonify(temp_data), 200
+
+    except ValueError:
+        return jsonify({"error": "Invalid input. Celsius must be an integer."}), 400
 
 
 @api.route('/api/prime', methods=['GET'])
@@ -89,7 +93,7 @@ def fibonacci():
         return jsonify(fibonacci_ans), 200
 
     except ValueError:
-        return jsonify({"error": "Invalid input. n must be an integer."}), 400
+        return jsonify({"error": "Invalid input. N must be an integer."}), 400
 
 
 if __name__ == "__main__":
