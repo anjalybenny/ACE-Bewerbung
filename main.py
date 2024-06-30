@@ -7,6 +7,11 @@ import json
 api = Flask(__name__)
 
 
+@api.route('/')
+def home():
+    return "API-Home"
+
+
 @api.route('/api/temp', methods=['GET'])
 def convert_celsuis_to_kelvin():
     cel = request.args.get("celsius", default=25, type=float)
