@@ -29,9 +29,19 @@ def convert_celsuis_to_kelvin():
 
 @api.route('/api/prime', methods=['GET'])
 def find_prim_numbers():
-    limit = request.args.get("limit", default=7, type=int)
-    prime_num = json.dumps({'prime': sieve_eratosthenes(limit).tolist()})
-    return jsonify(prime_num), 200
+    try:
+        limit = int(request.args.get('limit', ''))
+
+        if limit < 0:
+            return jsonify({"error": "Limit must be a non-negative integer."}), 400
+        if limit > 10000:
+            return jsonify({"error": "Limit must be less than or equal to 10000."}), 400
+
+        prime_num = json.dumps({'prime': sieve_eratosthenes(limit).tolist()})
+        return jsonify(prime_num), 200
+
+    except ValueError:
+        return jsonify({"error": "Invalid input. Limit must be an integer."}), 400
 
 
 def sieve_eratosthenes(lim):
@@ -54,21 +64,32 @@ def sieve_eratosthenes(lim):
 @api.route('/api/number', methods=['GET'])
 def fibonacci():
     num = request.args.get("n", default=45, type=int)
-    fibonacci_num = np.ones(num+1)
-    fibonacci_num[0] = 0
-    if num > 0:
-        fibonacci_num[1] = 1
-        i = 2
-        while i <= num:
-            fibonacci_num[i] = fibonacci_num[i-1]+fibonacci_num[i-2]
-            i += 1
+    try:
+        num = int(request.args.get('n', ''))
 
-    fibonacci_ans = {
+        if num < 0:
+            return jsonify({"error": "n must be a non-negative integer."}), 400
+        if num > 50:
+            return jsonify({"error": "n must be less than or equal to 50."}), 400
 
-        "number":  fibonacci_num[num]
+        fibonacci_num = np.ones(num+1)
+        fibonacci_num[0] = 0
+        if num > 0:
+            fibonacci_num[1] = 1
+            i = 2
+            while i <= num:
+                fibonacci_num[i] = fibonacci_num[i-1]+fibonacci_num[i-2]
+                i += 1
 
-    }
-    return jsonify(fibonacci_ans), 200
+        fibonacci_ans = {
+
+            "number":  fibonacci_num[num]
+
+        }
+        return jsonify(fibonacci_ans), 200
+
+    except ValueError:
+        return jsonify({"error": "Invalid input. n must be an integer."}), 400
 
 
 if __name__ == "__main__":
