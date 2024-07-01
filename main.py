@@ -28,7 +28,7 @@ def convert_celsuis_to_kelvin():
         return jsonify(temp_data), 200
 
     except ValueError:
-        return jsonify({"error": "Invalid input. Celsius must be an integer."}), 400
+        return jsonify({"error": "Invalid input. Celsius must be a float."}), 400
 
 
 @api.route('/api/prime', methods=['GET'])
